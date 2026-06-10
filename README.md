@@ -21,25 +21,26 @@ Regressão para prever o valor mediano de imóveis (proxy de risco de crédito) 
 
 ## Results
 
-| Modelo     | RMSE (test) | MAE (test) | R² (test) |
-|------------|-------------|------------|-----------|
-| **Ridge**  | **0.7215**  | **0.5226** | **0.6085**|
-| Linear     | 0.7216      | 0.5227     | 0.6084    |
-| ElasticNet | 0.7970      | 0.5985     | 0.5223    |
-| Lasso      | 0.8227      | 0.6218     | 0.4910    |
+| Model      | CV RMSE | CV Std | Test RMSE |
+|------------|---------|--------|-----------|
+| **Ridge**  | 0.8177  | 0.1958 | **0.7215**|
+| Linear     | 0.8253  | 0.2110 | 0.7216    |
+| ElasticNet | 0.8019  | 0.0123 | 0.7970    |
+| Lasso      | 0.8198  | 0.0059 | 0.8227    |
 
-RMSE em unidades de $100k — o Ridge erra em média ~$72k por previsão.
+RMSE em unidades de $100k — o Ridge erra em média ~$72k por previsão no test set.
 
 ## Learning Curve
 
-As curvas de aprendizado (`outputs/learning_curve_*.png`) mostram que Ridge e Linear convergem a partir de ~9.000 amostras com gap treino/validação pequeno — sinal de underfitting leve, não overfitting. Lasso e ElasticNet convergem mais cedo mas em um patamar de erro mais alto, confirmando penalização excessiva.
+![Learning Curve](outputs/learning_curve_ridge.png)
+
+O Ridge apresenta **underfitting leve**: a curva de treino estabiliza em ~0.70 desde o início, enquanto a validação converge para o mesmo patamar apenas após ~9.000 amostras — indicando que o modelo tem viés, não variância. O gap pequeno entre as curvas descarta overfitting. O R² de 0.61 confirma que relações não-lineares entre localização e valor dos imóveis não estão sendo capturadas por um modelo linear.
 
 ## What I'd Do Differently
 
-- Testar modelos não-lineares (Random Forest, Gradient Boosting) — o R² de 0.61 sugere que relações não-lineares entre localização e valor não estão sendo capturadas.
-- Adicionar features geográficas (distância ao oceano, ao centro urbano) para substituir Latitude/Longitude brutas.
-- Usar `HalvingRandomSearchCV` em vez de `RandomizedSearchCV` para fine-tuning mais eficiente.
-- Versionar o modelo treinado com MLflow ou joblib + hash do dataset.
+1. Testar modelos não-lineares (Random Forest, Gradient Boosting) para capturar interações entre `Latitude`/`Longitude` e `MedInc` que o modelo linear ignora.
+2. Adicionar features geográficas derivadas (distância ao oceano, ao centro urbano) em vez de usar coordenadas brutas, que criam uma superfície de decisão não-linear difícil para regressão linear.
+3. Usar `HalvingRandomSearchCV` no fine-tuning para explorar mais combinações de hiperparâmetros com o mesmo orçamento computacional.
 
 ## How to Run
 
