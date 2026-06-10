@@ -28,19 +28,21 @@ def X_households_zero():
 
 @pytest.fixture
 def X_sample():
-    """DataFrame com as colunas exatas do California Housing e 200 amostras sintéticas."""
+    """DataFrame com as 8 colunas numéricas do California Housing e 200 amostras sintéticas.
+
+    Não inclui ocean_proximity — build_full_pipeline() opera apenas sobre colunas
+    numéricas desde que fetch_california_housing (sklearn) não fornece essa coluna.
+    """
     n = 200
-    categorias = ["<1H OCEAN", "INLAND", "NEAR OCEAN", "NEAR BAY", "ISLAND"]
     return pd.DataFrame({
-        "MedInc":          RNG.uniform(0.5, 15.0, n),
-        "HouseAge":        RNG.uniform(1.0, 52.0, n),
-        "AveRooms":        RNG.uniform(1.0, 15.0, n),
-        "AveBedrms":       RNG.uniform(0.5, 5.0, n),
-        "Population":      RNG.uniform(3.0, 3000.0, n),
-        "AveOccup":        RNG.uniform(1.0, 10.0, n),
-        "Latitude":        RNG.uniform(32.0, 42.0, n),
-        "Longitude":       RNG.uniform(-124.0, -114.0, n),
-        "ocean_proximity": RNG.choice(categorias, n),
+        "MedInc":     RNG.uniform(0.5, 15.0, n),
+        "HouseAge":   RNG.uniform(1.0, 52.0, n),
+        "AveRooms":   RNG.uniform(1.0, 15.0, n),
+        "AveBedrms":  RNG.uniform(0.5, 5.0, n),
+        "Population": RNG.uniform(3.0, 3000.0, n),
+        "AveOccup":   RNG.uniform(1.0, 10.0, n),
+        "Latitude":   RNG.uniform(32.0, 42.0, n),
+        "Longitude":  RNG.uniform(-124.0, -114.0, n),
     })
 
 
