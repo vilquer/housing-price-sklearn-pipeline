@@ -1,4 +1,4 @@
-# credit-risk-sklearn-pipeline
+# housing-price-sklearn-pipeline
 
 ## Problem
 
